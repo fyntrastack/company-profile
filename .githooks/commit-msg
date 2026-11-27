@@ -1,0 +1,12 @@
+#!/bin/sh
+# Branch main hanya menerima pesan commit berformat v1.x (contoh: v1.0, v1.1, v1.2.1)
+branch=$(git symbolic-ref --short HEAD 2>/dev/null)
+msg=$(head -n1 "$1" | tr -d '\r')
+
+if [ "$branch" = "main" ]; then
+  if ! echo "$msg" | grep -Eq '^v1\.[0-9]+(\.[0-9]+)*$'; then
+    echo "Commit ditolak: di branch main pesan harus berformat v1.x (contoh: v1.1)"
+    echo "Pesan Anda: $msg"
+    exit 1
+  fi
+fi
